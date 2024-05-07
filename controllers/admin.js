@@ -15,21 +15,21 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
   const product = new Product(null, title, imageUrl, description, price);
   product
-  .save()
-  .then(() => {
-    res.redirect('/');
-  })
-  .catch(err => console.log(err));
+    .save()
+    .then(() => {
+      res.redirect('/');
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
-  if(! editMode) {
-    res.redirect('/');
+  if (!editMode) {
+    return res.redirect('/');
   }
   const prodId = req.params.productId;
   Product.findById(prodId, product => {
-    if(!product) {
+    if (!product) {
       return res.redirect('/');
     }
     res.render('admin/edit-product', {
@@ -47,16 +47,16 @@ exports.postEditProduct = (req, res, next) => {
   const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
-  const updatedProduct = new Product (
+  const updatedProduct = new Product(
     prodId,
     updatedTitle,
     updatedImageUrl,
-    updatedPrice,
-    updatedDesc
+    updatedDesc,
+    updatedPrice
   );
   updatedProduct.save();
   res.redirect('/admin/products');
-}
+};
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
@@ -68,32 +68,8 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
-
-// Some Error in this
-
 exports.postDeleteProduct = (req, res, next) => {
-  //const prodId = req.body.productId;
-  //Product.deleteById(prodId);
-  //res.redirect('/admin/products');
-  /*Product.findById(prodId, product => {
-    if(! product) {
-      return res.redirect('/');
-    }
-    res.render('admin/delete-product', {
-      pageTitle: 'Delete Product',
-      path: '/admin/delete-product',
-      //editing: editMode,
-      product: product
-    });
-  });*/
-
   const prodId = req.body.productId;
-  Product.deleteById(prodId)
-    .then(() => {
-      res.redirect('/admin/products');
-    })
-    .catch(err => {
-      console.log(err);
-      res.redirect('/');
-    });
-}
+  Product.deleteById(prodId);
+  res.redirect('/admin/products');
+};
