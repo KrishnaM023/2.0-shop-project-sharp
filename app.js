@@ -17,7 +17,6 @@ app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const userRoutes = require('../routes');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,22 +32,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
-app.use('/user', userRoutes);
 
-app.post('/user/add-user', async(req,res) => {
-    try {
-        if(!req.body.number){
-            throw new Error('Phone Number is mandatory');
-        }
-        const name = req.body.name;
-        const email = req.body.email;
-        const phoneNumber = req.body.number;
-    } catch(err) {
-        res.status(500).json({
-            error: err
-        })
-    }
-})
 
 app.use(errorController.get404);
 
